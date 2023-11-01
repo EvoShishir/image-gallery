@@ -1,9 +1,15 @@
 import { useState } from "react";
 import "./App.css";
 import { imagesList } from "./imagesList";
-import { DragDropContext, Draggable, Droppable } from "react-beautiful-dnd";
+import { DndContext, closestCenter } from "@dnd-kit/core";
+import {
+  SortableContext,
+  rectSortingStrategy,
+  useSortable,
+} from "@dnd-kit/sortable";
 
-function App() {
+const App = () => {
+  const [images] = useState(imagesList);
   const [selectedImages, setSelectedImages] = useState([]);
 
   const toggleImageSelection = (imageId) => {
@@ -15,12 +21,16 @@ function App() {
   };
 
   const deleteSelectedImages = () => {
-    const updatedImagesList = imagesList.filter(
+    const updatedimages = images.filter(
       (image) => !selectedImages.includes(image.id)
     );
-    imagesList.length = 0;
-    imagesList.push(...updatedImagesList);
+    images.length = 0;
+    images.push(...updatedimages);
     setSelectedImages([]);
+  };
+
+  const onDragEnd = (event) => {
+    console.log("onDragEnd", event);
   };
 
   return (
@@ -34,50 +44,27 @@ function App() {
         </header>
         <br />
         <br />
-        <DragDropContext>
-          <Droppable droppableId="grid">
-            {(provided) => (
-              <section
-                className="images-showcase"
-                {...provided.droppableProps}
-                ref={provided.innerRef}
-              >
-                {imagesList.map((image, index) => (
-                  <Draggable
-                    key={image.id}
-                    draggableId={image.id}
-                    index={index}
-                  >
-                    {(provided) => (
-                      <div
-                        className="image-container"
-                        {...provided.draggableProps}
-                        {...provided.dragHandleProps}
-                        ref={provided.innerRef}
-                      >
-                        <img
-                          className="image"
-                          src={image.src}
-                          alt={image.alt}
-                        />
-                        <input
-                          type="checkbox"
-                          className="image-checkbox"
-                          onChange={() => toggleImageSelection(image.id)}
-                          checked={selectedImages.includes(image.id)}
-                        />
-                      </div>
-                    )}
-                  </Draggable>
-                ))}
-                {provided.placeholder}
-              </section>
-            )}
-          </Droppable>
-        </DragDropContext>
+
+        <section className="images-showcase">
+          <DndContext collisionDetection={closestCenter} onDragEnd={onDragEnd}>
+            <SortableContext items={images} strategy={rectSortingStrategy}>
+              {images.map((image) => (
+                <div className="image-container" key={image.id}>
+                  <img className="image" src={image.src} alt={image.alt} />
+                  <input
+                    type="checkbox"
+                    className="image-checkbox"
+                    onChange={() => toggleImageSelection(image.id)}
+                    checked={selectedImages.includes(image.id)}
+                  />
+                </div>
+              ))}
+            </SortableContext>
+          </DndContext>
+        </section>
       </div>
     </div>
   );
-}
+};
 
 export default App;
