@@ -1,8 +1,8 @@
 img {
   width: 100%;
   height: 100%;
-  /* width: 200px;
-  height: 200px; */
+  background-color: white;
+  min-width: 0;
 }
 
 body {
@@ -28,7 +28,7 @@ button:hover {
 .container {
   max-width: 1000px;
   background-color: white;
-  padding: 30px 40px;
+  padding: 20px 30px;
   border-radius: 10px;
 }
 
@@ -36,39 +36,37 @@ button:hover {
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
 }
 
 .header {
   display: flex;
   justify-content: space-between;
   border-bottom: 1px solid rgba(128, 128, 128, 0.371);
-  padding-bottom: 10px;
 }
 
 .images-showcase {
-  display: grid;
   grid-template-columns: repeat(5, 1fr);
+  display: grid;
   gap: 20px;
+  max-width: 100%;
 }
 
 .image {
   border-radius: 10px;
+  border: 1px solid rgba(128, 128, 128, 0.371);
 }
 
 .image-container {
-  border: 1px solid rgba(128, 128, 128, 0.371);
-  transition: 200ms;
   border-radius: 10px;
+  position: relative;
+  display: inline-block;
+  transition: 300ms;
 }
 
 .image-container:first-child {
   grid-column: span 2;
   grid-row: span 2;
-}
-
-.image-container {
-  position: relative;
-  display: inline-block;
 }
 
 .image-checkbox {
@@ -79,17 +77,46 @@ button:hover {
   background-color: white;
   border: 1px solid #ccc;
   border-radius: 50%;
-  width: 20px;
-  height: 20px;
+  width: 15px;
+  height: 15px;
   cursor: pointer;
 }
 
-.image-container:hover .image-checkbox,
-.image-container:hover {
-  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+.image-container:hover .image-checkbox {
   display: block;
+}
+
+.image-container:hover .overlay {
+  cursor: grab;
 }
 
 .image-checkbox:checked {
   display: block;
+}
+
+@media (max-width: 767px) {
+  .container {
+    max-width: 400px;
+  }
+  .images-showcase {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  .container {
+    max-width: 500px;
+  }
+}
+
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .container {
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 1366px) {
+  .container {
+    max-width: 700px;
+  }
 }

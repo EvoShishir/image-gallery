@@ -1,10 +1,36 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import {
+  DndContext,
+  closestCenter,
+  KeyboardSensor,
+  PointerSensor,
+  useSensor,
+  useSensors,
+} from "@dnd-kit/core";
+import {
+  arrayMove,
+  rectSortingStrategy,
+  SortableContext,
+  sortableKeyboardCoordinates,
+} from "@dnd-kit/sortable";
 import "./App.css";
+
 import { imagesList } from "./imagesList";
 
-const App = () => {
-  const [images] = useState(imagesList);
+import { SortableItem } from "./SortableItem";
+
+function App() {
+  const [images, setImages] = useState(imagesList);
   const [selectedImages, setSelectedImages] = useState([]);
+
+  console.log(selectedImages);
+
+  const sensors = useSensors(
+    useSensor(PointerSensor),
+    useSensor(KeyboardSensor, {
+      coordinateGetter: sortableKeyboardCoordinates,
+    })
+  );
 
   const toggleImageSelection = (imageId) => {
     if (selectedImages.includes(imageId)) {
@@ -39,23 +65,43 @@ const App = () => {
         </header>
         <br />
         <br />
-
-        <section className="images-showcase">
-          {images.map((image) => (
-            <div className="image-container" key={image.id}>
-              <img className="image" src={image.src} alt={image.alt} />
-              <input
-                type="checkbox"
-                className="image-checkbox"
-                onChange={() => toggleImageSelection(image.id)}
-                checked={selectedImages.includes(image.id)}
-              />
-            </div>
-          ))}
-        </section>
+        <DndContext
+          sensors={sensors}
+          collisionDetection={closestCenter}
+          onDragEnd={handleDragEnd}
+        >
+          <SortableContext items={images} strategy={rectSortingStrategy}>
+            <section className="images-showcase">
+              {images.map((image) => (
+                <div key={image.id} className="image-container ">
+                  <SortableItem key={image.id} id={image.id} src={image.src} />
+                  <input
+                    type="checkbox"
+                    className="image-checkbox"
+                    onChange={() => toggleImageSelection(image.id)}
+                    checked={selectedImages.includes(image.id)}
+                  />
+                </div>
+              ))}
+            </section>
+          </SortableContext>
+        </DndContext>
       </div>
     </div>
   );
-};
+
+  function handleDragEnd(event) {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setImages((images) => {
+        const oldIndex = images.findIndex((image) => image.id === active.id);
+        const newIndex = images.findIndex((image) => image.id === over.id);
+
+        return arrayMove(images, oldIndex, newIndex);
+      });
+    }
+  }
+}
 
 export default App;
