@@ -54,7 +54,6 @@ button:hover {
 
 .image {
   border-radius: 10px;
-  border: 1px solid rgba(128, 128, 128, 0.371);
 }
 
 .image-container {
@@ -62,6 +61,7 @@ button:hover {
   position: relative;
   display: inline-block;
   transition: 300ms;
+  border: 1px solid rgba(128, 128, 128, 0.371);
 }
 
 .image-container:first-child {
@@ -86,8 +86,9 @@ button:hover {
   display: block;
 }
 
-.image-container:hover .overlay {
+.image-container:hover {
   cursor: grab;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 }
 
 .image-checkbox:checked {
