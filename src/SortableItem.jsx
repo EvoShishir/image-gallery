@@ -1,7 +1,6 @@
 import React from "react";
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import "./app.css";
 
 export function SortableItem(props) {
   const {
@@ -22,7 +21,12 @@ export function SortableItem(props) {
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
       <img
         className="image"
-        style={{ opacity: isDragging ? 0 : 1 }}
+        style={{
+          borderRadius: "10px",
+          width: "100%",
+          height: "100%",
+          opacity: isDragging ? 0 : 1,
+        }}
         src={props.src}
         alt={props.alt}
       />
