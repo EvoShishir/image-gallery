@@ -116,7 +116,12 @@ function App() {
           <DragOverlay>
             {foundImage?.id ? (
               <div className="image-container">
-                <img className="image " src={foundImage.src} alt="" />
+                <img
+                  className="image"
+                  style={{ opacity: "0.5" }}
+                  src={foundImage.src}
+                  alt="image"
+                />
               </div>
             ) : null}
           </DragOverlay>

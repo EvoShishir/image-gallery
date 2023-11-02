@@ -25,7 +25,7 @@ export function SortableItem(props) {
           borderRadius: "10px",
           width: "100%",
           height: "100%",
-          opacity: isDragging ? 0 : 1,
+          opacity: isDragging ? 0.5 : 1,
         }}
         src={props.src}
         alt={props.alt}
