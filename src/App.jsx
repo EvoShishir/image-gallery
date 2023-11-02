@@ -7,6 +7,7 @@ import {
   PointerSensor,
   useSensor,
   useSensors,
+  TouchSensor,
 } from "@dnd-kit/core";
 import {
   arrayMove,
@@ -17,8 +18,7 @@ import {
 import "./App.css";
 
 import { imagesList } from "./imagesList";
-
-import { SortableItem } from "./SortableItem";
+import { SortableItem } from "./components/SortableItem";
 
 function App() {
   const [images, setImages] = useState(imagesList);
@@ -28,6 +28,7 @@ function App() {
 
   const sensors = useSensors(
     useSensor(PointerSensor),
+    useSensor(TouchSensor),
     useSensor(KeyboardSensor, {
       coordinateGetter: sortableKeyboardCoordinates,
     })
@@ -84,7 +85,7 @@ function App() {
           {selectedImages.length > 0 && (
             <>
               <p>
-                <b>{selectedImages.length} item(s) selected</b>
+                <b>{selectedImages.length} selected</b>
               </p>
               <button onClick={deleteSelectedImages}>Delete files</button>
             </>
