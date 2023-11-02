@@ -4,8 +4,14 @@ import { CSS } from "@dnd-kit/utilities";
 import "./app.css";
 
 export function SortableItem(props) {
-  const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: props.id });
+  const {
+    attributes,
+    isDragging,
+    listeners,
+    setNodeRef,
+    transform,
+    transition,
+  } = useSortable({ id: props.id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -14,7 +20,12 @@ export function SortableItem(props) {
 
   return (
     <div ref={setNodeRef} style={style} {...attributes} {...listeners}>
-      <img className="image" src={props.src} alt={props.alt} />
+      <img
+        className="image"
+        style={{ opacity: isDragging ? 0 : 1 }}
+        src={props.src}
+        alt={props.alt}
+      />
     </div>
   );
 }

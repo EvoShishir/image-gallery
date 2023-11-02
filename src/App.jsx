@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import {
   DndContext,
+  DragOverlay,
   closestCenter,
   KeyboardSensor,
   PointerSensor,
@@ -23,7 +24,7 @@ function App() {
   const [images, setImages] = useState(imagesList);
   const [selectedImages, setSelectedImages] = useState([]);
 
-  console.log(selectedImages);
+  const [foundImage, setFoundImage] = useState();
 
   const sensors = useSensors(
     useSensor(PointerSensor),
@@ -49,6 +50,32 @@ function App() {
     setSelectedImages([]);
   };
 
+  const handleDragStart = (event) => {
+    findImageById(event.active.id);
+  };
+
+  const handleDragEnd = (event) => {
+    const { active, over } = event;
+
+    if (active.id !== over.id) {
+      setImages((images) => {
+        const oldIndex = images.findIndex((image) => image.id === active.id);
+        const newIndex = images.findIndex((image) => image.id === over.id);
+
+        return arrayMove(images, oldIndex, newIndex);
+      });
+    }
+  };
+
+  function findImageById(id) {
+    const image = images.find((image) => image.id === id);
+    if (image) {
+      setFoundImage(image);
+    } else {
+      setFoundImage(null);
+    }
+  }
+
   return (
     <div className="center-container">
       <div className="container">
@@ -68,6 +95,7 @@ function App() {
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
+          onDragStart={handleDragStart}
           onDragEnd={handleDragEnd}
         >
           <SortableContext items={images} strategy={rectSortingStrategy}>
@@ -85,23 +113,17 @@ function App() {
               ))}
             </section>
           </SortableContext>
+          <DragOverlay>
+            {foundImage?.id ? (
+              <div className="image-container">
+                <img className="image " src={foundImage.src} alt="" />
+              </div>
+            ) : null}
+          </DragOverlay>
         </DndContext>
       </div>
     </div>
   );
-
-  function handleDragEnd(event) {
-    const { active, over } = event;
-
-    if (active.id !== over.id) {
-      setImages((images) => {
-        const oldIndex = images.findIndex((image) => image.id === active.id);
-        const newIndex = images.findIndex((image) => image.id === over.id);
-
-        return arrayMove(images, oldIndex, newIndex);
-      });
-    }
-  }
 }
 
 export default App;
